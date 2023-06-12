@@ -18,7 +18,7 @@ public class SimulationManagerFirst : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void StartSimulation()
@@ -43,7 +43,7 @@ public class SimulationManagerFirst : MonoBehaviour
         }
     }
 
-    Vector3[] Sunflower(int n, int alpha=0)
+    Vector3[] Sunflower(int n, int alpha = 0)
     {
         var points = new Vector3[n];
         var angle_stride = 2 * Mathf.PI / (PHI * PHI);
@@ -54,7 +54,7 @@ public class SimulationManagerFirst : MonoBehaviour
             var theta = k * angle_stride;
             var x = r * Mathf.Cos(theta);
             var y = r * Mathf.Sin(theta);
-            points[k - 1] = new Vector3(x, 0.1f, y);
+            points[k - 1] = new Vector3(x, 1f, y);
             Debug.Log(points[k - 1]);
         }
         return points;
