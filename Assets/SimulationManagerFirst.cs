@@ -28,18 +28,18 @@ public class SimulationManagerFirst : MonoBehaviour
         {
             var currRadian = radianStep * i;
             var oppositeDegree = -currRadian * Mathf.Rad2Deg - 90;
-            var x = Mathf.Cos(currRadian) * 13.5f;
-            var y = Mathf.Sin(currRadian) * 13.5f;
-            var slimePos = new Vector3(x, 0.1f, y);
+            var x = Mathf.Cos(currRadian) * 26f;
+            var y = Mathf.Sin(currRadian) * 26f;
+            var slimePos = new Vector3(x, 2f, y);
             var slimeRot = Quaternion.identity * Quaternion.Euler(Vector3.up * oppositeDegree);
-            Instantiate(slime, slimePos, slimeRot);
+            Instantiate(slime, slimePos, slimeRot, parent: this.transform);
         }
 
         var points = Sunflower(100, alpha: 2);
 
         for (int k = 0; k < 100; k++)
         {
-            Instantiate(meal, points[k], Quaternion.identity);
+            Instantiate(meal, points[k], Quaternion.identity, parent: this.transform);
         }
     }
 
@@ -54,8 +54,7 @@ public class SimulationManagerFirst : MonoBehaviour
             var theta = k * angle_stride;
             var x = r * Mathf.Cos(theta);
             var y = r * Mathf.Sin(theta);
-            points[k - 1] = new Vector3(x, 1f, y);
-            Debug.Log(points[k - 1]);
+            points[k - 1] = new Vector3(x, 2f, y);
         }
         return points;
     }
@@ -63,7 +62,7 @@ public class SimulationManagerFirst : MonoBehaviour
     float Radius(int k, int n, int b)
     {
         if (k > n - b)
-            return 11.0f;
-        return Mathf.Sqrt(k - 0.5f) / Mathf.Sqrt(n - (b + 1) / 2) * 11.0f;
+            return 20.0f;
+        return Mathf.Sqrt(k - 0.5f) / Mathf.Sqrt(n - (b + 1) / 2) * 20.0f;
     }
 }
