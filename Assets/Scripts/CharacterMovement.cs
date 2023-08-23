@@ -6,6 +6,12 @@ public class CharacterMovement : MonoBehaviour
 {
     [SerializeField]
     private float speed = 6f, gravity = 19.62f;
+    public enum CreatureTypes
+    {
+        Slime,
+        Turtle
+    }
+    public CreatureTypes creatureType;
     private CharacterController controller;
     private Vector3 velocity, targetPosition, initialPosition;
     private bool isGrounded;

@@ -359,6 +359,7 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/Scripts/CharacterMovement.cs"
 "Assets/Scripts/SimulationManagerFirst.cs"
+"Assets/Scripts/SimulationManagerSecond.cs"
 "Assets/TutorialInfo/Scripts/Readme.cs"
 -langversion:9.0
 

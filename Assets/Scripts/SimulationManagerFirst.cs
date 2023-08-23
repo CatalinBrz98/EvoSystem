@@ -9,7 +9,17 @@ public class SimulationManagerFirst : MonoBehaviour
     [SerializeField]
     private int initSlimesCount, initMealsCount;
     [SerializeField]
+    private float mealNutrition = 2f;
+    private enum ResourceShareModes
+    {
+        Greedy,
+        Altruistic
+    }
+    [SerializeField]
+    private ResourceShareModes resourceShareMode = ResourceShareModes.Altruistic;
+    [SerializeField]
     private bool ultraFastSimulation = false;
+
     private int slimesCount, mealsCount;
     private float PHI = (Mathf.Sqrt(5) + 1) / 2;
     private List<GameObject> creatures = new List<GameObject>(), meals = new List<GameObject>();
@@ -105,14 +115,11 @@ public class SimulationManagerFirst : MonoBehaviour
             switch (mealTargetsReverse[meal].Count)
             {
                 case 1:
-                    newSlimesCount += RandomEvent(0.75f);
-                    newSlimesCount += RandomEvent(0.75f);
+                    newSlimesCount += ShareResources(mealNutrition);
                     break;
                 case 2:
-                    newSlimesCount += RandomEvent(0.375f);
-                    newSlimesCount += RandomEvent(0.375f);
-                    newSlimesCount += RandomEvent(0.375f);
-                    newSlimesCount += RandomEvent(0.375f);
+                    newSlimesCount += ShareResources(mealNutrition / 2);
+                    newSlimesCount += ShareResources(mealNutrition / 2);
                     break;
                 default:
                     break;
@@ -195,5 +202,41 @@ public class SimulationManagerFirst : MonoBehaviour
         if (Random.value <= chance)
             return 1;
         return 0;
+    }
+
+    int ShareResources(float nutrition)
+    {
+        int currCount = 0;
+        switch (resourceShareMode)
+        {
+            case ResourceShareModes.Altruistic:
+                if (nutrition <= 1f)
+                {
+                    currCount += RandomEvent(nutrition / 2);
+                    currCount += RandomEvent(nutrition / 2);
+                }
+                else
+                {
+                    int tries = Mathf.CeilToInt(nutrition);
+                    for (int i = 0; i < tries; i++)
+                        currCount += RandomEvent(nutrition / tries);
+                }
+                break;
+            case ResourceShareModes.Greedy:
+                if (nutrition <= 1f)
+                    currCount += RandomEvent(nutrition);
+                else
+                {
+                    currCount += 1;
+                    nutrition -= 1f;
+                    int tries = Mathf.CeilToInt(nutrition);
+                    for (int i = 0; i < tries; i++)
+                        currCount += RandomEvent(nutrition / tries);
+                }
+                break;
+            default:
+                break;
+        }
+        return currCount;
     }
 }
