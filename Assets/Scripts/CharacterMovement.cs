@@ -25,6 +25,12 @@ public class CharacterMovement : MonoBehaviour
             case "GoToObject":
                 GoToObject();
                 break;
+            case "GoToPosition":
+                GoToPosition();
+                break;
+            case "TeleportToPosition":
+                TeleportToPosition();
+                break;
             default:
                 break;
         }
@@ -49,8 +55,8 @@ public class CharacterMovement : MonoBehaviour
 
     void GoToObject()
     {
-        Vector3 targetPostition = new Vector3(targetObject.transform.position.x, this.transform.position.y, targetObject.transform.position.z);
-        transform.LookAt(targetPostition);
+        Vector3 targetObjectPostition = new Vector3(targetObject.transform.position.x, this.transform.position.y, targetObject.transform.position.z);
+        transform.LookAt(targetObjectPostition);
 
         isGrounded = (controller.collisionFlags & CollisionFlags.Below) != 0;
         if (isGrounded && velocity.y < 0)
@@ -62,5 +68,41 @@ public class CharacterMovement : MonoBehaviour
 
         if (Vector3.Distance(transform.position, targetObject.transform.position) < 1)
             SetAction();
+    }
+
+    void GoToPosition()
+    {
+        transform.LookAt(targetPosition);
+
+        isGrounded = (controller.collisionFlags & CollisionFlags.Below) != 0;
+        if (isGrounded && velocity.y < 0)
+            velocity.y = 0f;
+        Vector3 movement = transform.forward;
+        controller.Move(movement * speed * Time.fixedDeltaTime);
+        velocity.y -= gravity * Time.deltaTime * Time.fixedDeltaTime;
+        controller.Move(velocity);
+
+        if (Vector3.Distance(transform.position, targetPosition) < 0.2)
+        {
+            transform.position = targetPosition;
+            if (targetObject)
+            {
+                Vector3 targetObjectPosition = new Vector3(targetObject.transform.position.x, this.transform.position.y, targetObject.transform.position.z);
+                transform.LookAt(targetObjectPosition);
+            }
+            SetAction();
+        }
+    }
+
+    void TeleportToPosition()
+    {
+        transform.LookAt(targetPosition);
+        transform.position = targetPosition;
+        if (targetObject)
+        {
+            Vector3 targetObjectPosition = new Vector3(targetObject.transform.position.x, this.transform.position.y, targetObject.transform.position.z);
+            transform.LookAt(targetObjectPosition);
+        }
+        SetAction();
     }
 }

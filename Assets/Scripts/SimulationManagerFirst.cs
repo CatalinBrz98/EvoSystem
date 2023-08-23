@@ -8,11 +8,14 @@ public class SimulationManagerFirst : MonoBehaviour
     private GameObject slime, meal;
     [SerializeField]
     private int initSlimesCount, initMealsCount;
+    [SerializeField]
+    private bool ultraFastSimulation = false;
     private int slimesCount, mealsCount;
     private float PHI = (Mathf.Sqrt(5) + 1) / 2;
     private List<GameObject> creatures = new List<GameObject>(), meals = new List<GameObject>();
     private Dictionary<GameObject, GameObject> mealTargets = new Dictionary<GameObject, GameObject>();
     private Dictionary<GameObject, List<GameObject>> mealTargetsReverse = new Dictionary<GameObject, List<GameObject>>();
+    private int totalCreatures = 0, totalMeals = 0, generationCount = 0;
     private string step = "Init";
     // Start is called before the first frame update
     void Start()
@@ -30,14 +33,13 @@ public class SimulationManagerFirst : MonoBehaviour
         {
             bool allArrived = true;
             for (int i = 0; i < slimesCount && allArrived; i++)
-                if (creatures[i].GetComponent<CharacterMovement>().GetAction() == "GoToObject")
+                if (creatures[i].GetComponent<CharacterMovement>().GetAction() != "Staying")
                     allArrived = false;
             if (allArrived)
             {
                 CalculateGeneration();
                 ResetSimulation();
                 StartSimulation();
-                Debug.Log(slimesCount);
             }
         }
     }
@@ -59,7 +61,7 @@ public class SimulationManagerFirst : MonoBehaviour
         Vector3[] points = Sunflower(mealsCount, alpha: 2);
         for (int k = 0; k < mealsCount; k++)
         {
-            meals.Add(Instantiate(meal, points[k], Quaternion.identity, parent: this.transform.Find("Assets")));
+            meals.Add(Instantiate(meal, points[k], Quaternion.Euler(0, Random.Range(0f, 360f), 0), parent: this.transform.Find("Assets")));
         }
 
         for (int i = 0; i < mealsCount; i++)
@@ -74,10 +76,22 @@ public class SimulationManagerFirst : MonoBehaviour
             mealTargetsReverse[meals[mealArrangement[i]]].Add(creatures[i]);
         }
 
+        List<GameObject> oldMeals = new List<GameObject>();
         foreach (KeyValuePair<GameObject, GameObject> mealTarget in mealTargets)
         {
-            mealTarget.Key.GetComponent<CharacterMovement>().SetAction(newAction: "GoToObject", newObject: mealTarget.Value);
+            string newAction = "GoToPosition";
+            if (ultraFastSimulation)
+                newAction = "TeleportToPosition";
+            if (!oldMeals.Contains(mealTarget.Value))
+            {
+                mealTarget.Key.GetComponent<CharacterMovement>().SetAction(newAction: newAction, newObject: mealTarget.Value, newPosition: mealTarget.Value.transform.Find("FirstPlace").position);
+                oldMeals.Add(mealTarget.Value);
+            }
+            else
+                mealTarget.Key.GetComponent<CharacterMovement>().SetAction(newAction: newAction, newObject: mealTarget.Value, newPosition: mealTarget.Value.transform.Find("SecondPlace").position);
         }
+        totalMeals += oldMeals.Count;
+
 
         step = "FirstStep";
     }
@@ -91,14 +105,14 @@ public class SimulationManagerFirst : MonoBehaviour
             switch (mealTargetsReverse[meal].Count)
             {
                 case 1:
-                    newSlimesCount += RandomEvent(1f);
-                    newSlimesCount += RandomEvent(1f);
+                    newSlimesCount += RandomEvent(0.75f);
+                    newSlimesCount += RandomEvent(0.75f);
                     break;
                 case 2:
-                    newSlimesCount += RandomEvent(0.5f);
-                    newSlimesCount += RandomEvent(0.5f);
-                    newSlimesCount += RandomEvent(0.5f);
-                    newSlimesCount += RandomEvent(0.5f);
+                    newSlimesCount += RandomEvent(0.375f);
+                    newSlimesCount += RandomEvent(0.375f);
+                    newSlimesCount += RandomEvent(0.375f);
+                    newSlimesCount += RandomEvent(0.375f);
                     break;
                 default:
                     break;
@@ -106,6 +120,10 @@ public class SimulationManagerFirst : MonoBehaviour
         }
 
         slimesCount = newSlimesCount;
+
+        generationCount += 1;
+        totalCreatures += slimesCount;
+        Debug.Log(string.Format("Current creatures: {0}, Average creatures: {1}, Average meals: {2}", slimesCount, ((float)totalCreatures) / generationCount, ((float)totalMeals) / generationCount));
     }
 
     void ResetSimulation()
