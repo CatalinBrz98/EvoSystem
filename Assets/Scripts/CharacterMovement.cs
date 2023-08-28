@@ -9,6 +9,10 @@ public class CharacterMovement : MonoBehaviour
     public enum CreatureTypes
     {
         Slime,
+        SlimePink,
+        SlimeBlack,
+        SlimeBlue,
+        SlimeGreen,
         Turtle
     }
     public CreatureTypes creatureType;

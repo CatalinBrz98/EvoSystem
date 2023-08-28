@@ -503,7 +503,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 12
   gravity: 19.62
-  creatureType: 0
+  creatureType: 3
 --- !u!1 &1989916952965676
 GameObject:
   m_ObjectHideFlags: 0

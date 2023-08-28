@@ -420,11 +420,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slime: {fileID: 1919012471076396, guid: 74905294aeedb964e83f32ee5a5dcb9f, type: 3}
   meal: {fileID: 7995497868466590050, guid: 6dab292edf3a75c44afd1cabc94861aa, type: 3}
-  initSlimesCount: 90
+  initSlimesCount: 10
   initMealsCount: 60
   mealNutrition: 2
   resourceShareMode: 1
-  ultraFastSimulation: 1
+  ultraFastSimulation: 0
 --- !u!4 &896575664
 Transform:
   m_ObjectHideFlags: 0

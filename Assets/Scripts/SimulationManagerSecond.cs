@@ -68,12 +68,12 @@ public class SimulationManagerSecond : MonoBehaviour
             float oppositeDegree = -currRadian * Mathf.Rad2Deg - 90;
             float x = Mathf.Cos(currRadian) * 26f;
             float y = Mathf.Sin(currRadian) * 26f;
-            Vector3 slimePos = new Vector3(x, 0.1f, y);
-            Quaternion slimeRot = Quaternion.identity * Quaternion.Euler(Vector3.up * oppositeDegree);
+            Vector3 creaturePos = new Vector3(x, 0.1f, y);
+            Quaternion creatureRot = Quaternion.identity * Quaternion.Euler(Vector3.up * oppositeDegree);
             if (i < slimesCount)
-                creatures.Add(Instantiate(slime, slimePos, slimeRot, parent: this.transform.Find("Population")));
+                creatures.Add(Instantiate(slime, creaturePos, creatureRot, parent: this.transform.Find("Population")));
             else
-                creatures.Add(Instantiate(turtle, slimePos, slimeRot, parent: this.transform.Find("Population")));
+                creatures.Add(Instantiate(turtle, creaturePos, creatureRot, parent: this.transform.Find("Population")));
         }
 
         Vector3[] points = Sunflower(mealsCount, alpha: 2);
